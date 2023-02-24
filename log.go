@@ -12,6 +12,7 @@ package etlog
 import (
 	"fmt"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/Dizzrt/etlog/color"
@@ -40,14 +41,19 @@ const (
 var (
 	loggers       map[string]*zap.Logger
 	defaultLogger *zap.Logger
+
+	_globalMu sync.RWMutex
 )
 
 func init() {
 	loggers = make(map[string]*zap.Logger)
 }
 
-func Log() *zap.Logger {
-	return defaultLogger
+func L() *zap.Logger {
+	_globalMu.RLock()
+	l := defaultLogger
+	_globalMu.RUnlock()
+	return l
 }
 
 func LogWithType(t string) *zap.Logger {
@@ -89,22 +95,11 @@ func NewLogger(config LogConfig, logType string) (err error) {
 
 	core := zapcore.NewTee(cores...)
 	logger := zap.New(core).WithOptions(zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel), zap.Fields(
-		zapcore.Field{
-			Key:    "ReporterType",
-			Type:   zapcore.StringType,
-			String: config.ReporterType,
-		},
-		zapcore.Field{
-			Key:    "ReporterName",
-			Type:   zapcore.StringType,
-			String: config.ReporterName,
-		},
-		zapcore.Field{
-			Key:    "LogType",
-			Type:   zapcore.StringType,
-			String: logType,
-		},
-	))
+		zap.Any("log_info", map[string]interface{}{
+			"ptype":    config.ReporterType, // producer type
+			"pname":    config.ReporterName, // producer name
+			"log_type": logType,
+		})))
 
 	if defaultLogger == nil {
 		defaultLogger = logger
