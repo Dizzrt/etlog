@@ -22,22 +22,6 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-type LogConfig struct {
-	ReporterType string
-	ReporterName string
-	FilePath     string
-	MaxFileSize  int
-	MaxBackups   int
-	MaxAge       int
-	Compress     bool
-	KafkaEnable  bool
-	KafkaConfig  kafka.KafkaConfig
-}
-
-const (
-	logTimeFormat = "2006-01-02 15:04:05.000 Z07:00"
-)
-
 var (
 	loggers       map[string]*zap.Logger
 	defaultLogger *zap.Logger
