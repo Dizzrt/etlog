@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/Dizzrt/etstream v0.0.0
+	github.com/dlclark/regexp2 v1.8.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	go.uber.org/zap v1.24.0
 )
@@ -35,7 +36,3 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-
-replace github.com/Dizzrt/etfoundation => /Users/bytedance/Desktop/etfoundation
-
-replace github.com/Dizzrt/etstream => /Users/bytedance/Desktop/etstream
