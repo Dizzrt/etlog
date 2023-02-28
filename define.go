@@ -34,7 +34,8 @@ type Log struct {
 	Time      time.Time
 	Level     zapcore.Level
 	Caller    string
-	Msg       string
+	Message   string
 	ExtraData map[string]interface{}
 	Traceback string
+	RawData   string
 }

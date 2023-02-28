@@ -36,8 +36,10 @@ func init() {
 }
 
 func Stash(l string) (Log, error) {
-	ll := Log{}
 	var err error
+	ll := Log{
+		RawData: l,
+	}
 
 	for i := 0; i < 1; i += 1 {
 		// time
@@ -75,7 +77,7 @@ func Stash(l string) (Log, error) {
 		if err != nil {
 			break
 		}
-		ll.Msg = match.String()
+		ll.Message = match.String()
 
 		// extra
 		match, err = logExtraReg.FindStringMatch(l)
