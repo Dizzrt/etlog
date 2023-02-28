@@ -46,56 +46,59 @@ func Stash(l string) (Log, error) {
 		match, err := logTimeReg.FindStringMatch(l)
 		if err != nil {
 			break
+		} else if match != nil {
+			t, err := time.Parse(logTimeFormat, match.String())
+			if err != nil {
+				break
+			}
+			ll.Time = t
 		}
-
-		t, err := time.Parse(logTimeFormat, match.String())
-		if err != nil {
-			break
-		}
-		ll.Time = t
 
 		// level
 		match, err = logLevelReg.FindStringMatch(l)
 		if err != nil {
 			break
-		}
-
-		ll.Level, err = zapcore.ParseLevel(match.String())
-		if err != nil {
-			break
+		} else if match != nil {
+			ll.Level, err = zapcore.ParseLevel(match.String())
+			if err != nil {
+				break
+			}
 		}
 
 		// caller
 		match, err = logCallerReg.FindStringMatch(l)
 		if err != nil {
 			break
+		} else if match != nil {
+			ll.Caller = match.String()
 		}
-		ll.Caller = match.String()
 
 		// msg
 		match, err = logMsgReg.FindStringMatch(l)
 		if err != nil {
 			break
+		} else if match != nil {
+			ll.Message = match.String()
 		}
-		ll.Message = match.String()
 
 		// extra
 		match, err = logExtraReg.FindStringMatch(l)
 		if err != nil {
 			break
-		}
-
-		err = json.Unmarshal([]byte(match.String()), &ll.ExtraData)
-		if err != nil {
-			break
+		} else if match != nil {
+			err = json.Unmarshal([]byte(match.String()), &ll.ExtraData)
+			if err != nil {
+				break
+			}
 		}
 
 		// traceback
 		match, err = logTracebackReg.FindStringMatch(l)
 		if err != nil {
 			break
+		} else if match != nil {
+			ll.Traceback = match.String()
 		}
-		ll.Traceback = match.String()
 	}
 
 	return ll, err
